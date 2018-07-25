@@ -30,11 +30,12 @@ var budgetController = (function() {
             var newItem, ID;
             
             //Create new ID
-            if (data.allItems[type].length > 0) {
-              ID = data.allItems[type][data.allItems[type].length -1].id +1;  
-            } else {
-                ID = 0;
-            }
+//            if (data.allItems[type].length > 0) {
+//              ID = data.allItems[type][data.allItems[type].length -1].id +1;  
+//            } else {
+//                ID = 0;
+//            }
+            ID = budgetController.idGenerator();
             
             //Create new item based on 'inc' or 'exp' type
             if(type === 'expense') {
@@ -49,6 +50,14 @@ var budgetController = (function() {
             //Return the new element
             return newItem;
         },
+        idGenerator: function() {
+		  var chars = '0123456789abcdefghiklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXTZ';
+		  var str = '';
+		  for( let i = 0; i < 10; i++) {
+              str+= chars[Math.floor(Math.random()* chars.length)];
+		  };
+		  return str;
+	   },
         
         testing: function() {
             console.log(data);
