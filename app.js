@@ -1,27 +1,29 @@
 // BUDGET CONTROLLER
-var budgetController = (function() {
+let budgetController = (() => {
     
-    var Expense = function(id, description, value) {
-        this.id = id;
-        this.description = description;
-        this.value = value;
+    let Expense = class {
+        constructor(id, description, value) {
+            this.id = id;
+            this.description = description;
+            this.value = value;
+        }
     };
     
-    var Income = function(id, description, value) {
-        this.id = id;
-        this.description = description;
-        this.value = value;
+    let Income = class {
+        constructor (id, description, value) {
+            this.id = id;
+            this.description = description;
+            this.value = value;
+        }
     };
     
-    var calculateTotal = function(type) {
-        var sum = 0;
-        data.allItems[type].forEach(function(cur) {
-            sum += cur.value;     
-        });
+    let calculateTotal = type => {
+        let sum = 0;
+        data.allItems[type].forEach(cur => sum += cur.value);
         data.totals[type] = sum;
     };
     
-    var data = {
+    let data = {
         allItems: {
             expense: [],
             income: []
@@ -36,8 +38,8 @@ var budgetController = (function() {
     };
     
     return {
-        addItem: function(type, des, val) {
-            var newItem, ID;
+        addItem: (type, des, val) => {
+            let newItem, ID;
             
             //Create new ID
 //            if (data.allItems[type].length > 0) {
@@ -61,7 +63,7 @@ var budgetController = (function() {
             return newItem;
         },
         
-        calculateBudget: function() {
+        calculateBudget: () => {
             
             // Calculate total income and expenses
             calculateTotal('expense');
@@ -78,12 +80,10 @@ var budgetController = (function() {
             }
         },
         
-        deleteItem: function(type, id) {
-            var ids, index;
+        deleteItem: (type, id) => {
+            let ids, index;
             
-            ids = data.allItems[type].map(function(current) {
-                return current.id;    
-            });
+            ids = data.allItems[type].map(current => current.id);
             
             index = ids.indexOf(id);
             
@@ -93,7 +93,7 @@ var budgetController = (function() {
             
         },
         
-        getBudget: function() {
+        getBudget: () => {
             return {
                 budget: data.budget,
                 totalInc: data.totals.income,
@@ -102,18 +102,16 @@ var budgetController = (function() {
             };    
         },
         
-        idGenerator: function() {
-		  var chars = '0123456789abcdefghiklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXTZ';
-		  var str = '';
+        idGenerator: () => {
+		  let chars = '0123456789abcdefghiklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXTZ';
+		  let str = '';
 		  for( let i = 0; i < 10; i++) {
               str+= chars[Math.floor(Math.random()* chars.length)];
 		  };
 		  return str;
 	   },
         
-        testing: function() {
-            console.log(data);
-        }
+        testing: () => console.log(data)
     };
     
 })();
@@ -121,9 +119,9 @@ var budgetController = (function() {
 
 
 // UI CONTROLLER
-var UIController = (function() {
+let UIController = (() => {
     //Objects to easier change the class data etc.
-    var DOMstrings = {
+    let DOMstrings = {
         inputType: '.add__type',
         inputDescription: '.add__description',
         inputValue: '.add__value',
@@ -138,7 +136,7 @@ var UIController = (function() {
     }
     
     return {
-        getInput: function() {
+        getInput: () => {
             return {
                 type: document.querySelector(DOMstrings.inputType).value, // Will be either inc or exp
                 description: document.querySelector(DOMstrings.inputDescription).value,
@@ -146,8 +144,8 @@ var UIController = (function() {
             };
         },
         
-        addListItem: function(obj, type) {
-            var html, newHtml, element;
+        addListItem: (obj, type) => {
+            let html, newHtml, element;
             // Create HTML string with placehoolder text
             
             if(type === 'income') {
@@ -185,20 +183,18 @@ var UIController = (function() {
             
         },
         
-        clearFields: function() {
-            var fields, fieldsArr;
+        clearFields: () => {
+            let fields, fieldsArr;
             fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
             
             fieldsArr = Array.prototype.slice.call(fields);
             
-            fieldsArr.forEach(function(current, index, array) {
-                current.value = '';
-            });
+            fieldsArr.forEach((current, index, array) => current.value = '');
             
             fieldsArr[0].focus();
         },
         
-        displayBudget: function(obj) {
+        displayBudget: obj => {
             
             document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
             document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
@@ -214,23 +210,21 @@ var UIController = (function() {
         },
         
         //Make DOMstrings to the public method
-        getDOMstrings: function() {
-            return DOMstrings;
-        }
+        getDOMstrings: () => DOMstrings
     };
     
 })();
 
 
 //GLOBAL APP CONTROLLER
-var controller = (function(budgetCtrl, UICtrl) {
+let controller = ((budgetCtrl, UICtrl) => {
     //Object DOMstrings from UIController
-    var DOM = UICtrl.getDOMstrings();
+    let DOM = UICtrl.getDOMstrings();
     
-    var setupEventListeners = function() {
+    let setupEventListeners = () => {
         document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
     
-        document.addEventListener('keypress', function(event) {
+        document.addEventListener('keypress', event => {
             
         if(event.keyCode === 13 || event.which === 13) {
             ctrlAddItem();
@@ -241,20 +235,20 @@ var controller = (function(budgetCtrl, UICtrl) {
         
     };
     
-    var updateBudget = function() {
+    let updateBudget = () => {
         
         //1. Calculate the budget
         budgetCtrl.calculateBudget();
         
         //2. Return  the budget
-        var budget = budgetCtrl.getBudget();
+        let budget = budgetCtrl.getBudget();
 
         //3. Display the budget on the UI
         UICtrl.displayBudget(budget);
     }
     
-    var ctrlAddItem = function() {
-        var input, newItem;
+    let ctrlAddItem = () => {
+        let input, newItem;
         
         //1. Get the filed input data
         input = UICtrl.getInput();
@@ -276,8 +270,8 @@ var controller = (function(budgetCtrl, UICtrl) {
 
     };
     
-    var ctrlDeleteItem = function(event) {
-        var itemID, splitID, type, ID;
+    let ctrlDeleteItem = event => {
+        let itemID, splitID, type, ID;
         itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
         
         if(itemID) {
@@ -299,7 +293,7 @@ var controller = (function(budgetCtrl, UICtrl) {
     }
     
     return {
-        init: function() {
+        init: () => {
             console.log('Application has started');
             UICtrl.displayBudget({
                 budget: 0,
