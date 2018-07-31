@@ -6,6 +6,19 @@ let budgetController = (() => {
             this.id = id;
             this.description = description;
             this.value = value;
+            this.percentage = -1;
+        }
+        
+        calcPercentage(totalIncome) {
+            if(totalIncome > 0) {
+                this.percentage = Math.round((this.value / totalIncome) * 100);
+        } else {
+                this.percentage = -1;
+            }
+        }
+        
+        getPercentage() {
+          return this.percentage;  
         }
     };
     
@@ -49,7 +62,7 @@ let budgetController = (() => {
 //            }
             ID = budgetController.idGenerator();
             
-            //Create new item based on 'inc' or 'exp' type
+            //Create new item based on 'income' or 'expense' type
             if(type === 'expense') {
                 newItem = new Expense(ID, des, val);
             } else if (type === 'income') {
@@ -78,6 +91,17 @@ let budgetController = (() => {
             } else {
                 data.percentage = -1;
             }
+        },
+        
+        calculatePercentages: () => {
+            
+            data.allItems.expense.forEach(cur => cur.calcPercentage(data.totals.income));
+            
+        },
+        
+        getPercentages: () => {
+            let allPerc = data.allItems.expense.map(cur => cur.getPercentage());
+            return allPerc;
         },
         
         deleteItem: (type, id) => {
@@ -132,7 +156,8 @@ let UIController = (() => {
         incomeLabel: '.budget__income--value',
         expsensesLabel: '.budget__expenses--value',
         percentageLabel: '.budget__expenses--percentage',
-        container: '.container'
+        container: '.container',
+        expensesPercLabel: '.item__percentage'
     }
     
     return {
@@ -165,7 +190,7 @@ let UIController = (() => {
                     <div class="item__description">%description%</div>
                     <div class="right clearfix">
                         <div class="item__value">%value%</div>
-                        <div class="item__percentage">21%</div>
+                        <div class="item__percentage"></div>
                         <div class="item__delete">
                             <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
                         </div>
@@ -214,6 +239,26 @@ let UIController = (() => {
             
         },
         
+        displayPercentages: percentages => {
+            
+            let fields = document.querySelectorAll(DOMstrings.expensesPercLabel);   
+            
+            let nodeListForEach = (list, callback) => {
+                for(let i = 0; i < list.length; i++) {
+                    callback(list[i], i);
+                }   
+            };
+            
+            nodeListForEach(fields, (current, index) => {
+                
+                if(percentages[index] > 0) {
+                current.textContent = percentages[index] + '%';
+                } else {
+                    current.textContent = '---';
+                }
+            });
+        },
+        
         //Make DOMstrings to the public method
         getDOMstrings: () => DOMstrings
     };
@@ -255,10 +300,13 @@ let controller = ((budgetCtrl, UICtrl) => {
     var updatePercentages = () => {
         
         // 1. Calculate percentages
+        budgetCtrl.calculatePercentages();
         
         // 2. Read percentages from the budget controller
+        let percentages = budgetCtrl.getPercentages();
         
         // 3. Update the UI with the new percentages
+        UICtrl.displayPercentages(percentages);
         
     }
     
