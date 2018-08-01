@@ -13,8 +13,29 @@ let UIController = (() => {
         expsensesLabel: '.budget__expenses--value',
         percentageLabel: '.budget__expenses--percentage',
         container: '.container',
-        expensesPercLabel: '.item__percentage'
-    }
+        expensesPercLabel: '.item__percentage',
+        dateLabel: '.budget__title--month'
+    };
+    
+            
+    let formatNumber = (num, type) => {
+        let numSplit, int, dec
+            
+        num = Math.abs(num);
+        num = num.toFixed(2);
+            
+        numSplit = num.split('.')
+        int = numSplit[0];
+            
+        if(int.length > 3) {
+            int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3, 3);    
+         }
+            
+        dec = numSplit[1];
+            
+        return (type === 'expense' ? '-' : '+') + ' ' + int + '.' + dec;
+            
+    };
     
     return {
         getInput: () => {
@@ -57,7 +78,7 @@ let UIController = (() => {
             // Replace the placeholder text with some actual data
             newHtml = html.replace('%id%', obj.id);
             newHtml = newHtml.replace('%description%', obj.description);
-            newHtml = newHtml.replace('%value%', obj.value);           
+            newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));           
             
             // Insert the HTML into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
@@ -80,11 +101,13 @@ let UIController = (() => {
             fieldsArr[0].focus();
         },
         
-        displayBudget: obj => {
+        displayBudget: (obj, type) => {
             
-            document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-            document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
-            document.querySelector(DOMstrings.expsensesLabel).textContent = obj.totalExp;
+            obj.budget > 0 ? type = 'income' : type = 'expense';
+            
+            document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+            document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'income');
+            document.querySelector(DOMstrings.expsensesLabel).textContent = formatNumber(obj.totalExp, 'expense');
             document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage;
             
             if(obj.percentage > 0) {
@@ -113,6 +136,18 @@ let UIController = (() => {
                     current.textContent = '---';
                 }
             });
+        },
+        
+        displayMonth: () => {
+            let now, month, months, year;
+            
+            now = new Date();
+            
+            months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            month = now.getMonth();
+            
+            year = now.getFullYear();
+            document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
         },
         
         //Make DOMstrings to the public method
