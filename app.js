@@ -18,6 +18,8 @@ let controller = ((budgetCtrl, UICtrl) => {
         
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
         
+        document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);
+        
     };
     
     let updateBudget = () => {

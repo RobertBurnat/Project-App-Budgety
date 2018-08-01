@@ -37,6 +37,12 @@ let UIController = (() => {
             
     };
     
+    let nodeListForEach = (list, callback) => {
+    for(let i = 0; i < list.length; i++) {
+        callback(list[i], i);
+        }   
+    };    
+    
     return {
         getInput: () => {
             return {
@@ -121,12 +127,7 @@ let UIController = (() => {
         displayPercentages: percentages => {
             
             let fields = document.querySelectorAll(DOMstrings.expensesPercLabel);   
-            
-            let nodeListForEach = (list, callback) => {
-                for(let i = 0; i < list.length; i++) {
-                    callback(list[i], i);
-                }   
-            };
+        
             
             nodeListForEach(fields, (current, index) => {
                 
@@ -148,6 +149,21 @@ let UIController = (() => {
             
             year = now.getFullYear();
             document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
+        },
+        
+        changedType: () => {
+                
+            let fields = document.querySelectorAll(
+                DOMstrings.inputType + ',' +
+                DOMstrings.inputDescription + ',' +
+                DOMstrings.inputValue);
+            
+            nodeListForEach(fields, cur => {
+               cur.classList.toggle('red-focus');
+            });
+            
+            document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
+            
         },
         
         //Make DOMstrings to the public method
