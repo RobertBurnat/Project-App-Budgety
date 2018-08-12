@@ -1,7 +1,7 @@
 // BUDGET CONTROLLER
-let budgetController = (() => {
+const budgetController = (() => {
     
-    let Expense = class {
+    const Expense = class {
         constructor(id, description, value) {
             this.id = id;
             this.description = description;
@@ -22,7 +22,7 @@ let budgetController = (() => {
         }
     };
     
-    let Income = class {
+    const Income = class {
         constructor (id, description, value) {
             this.id = id;
             this.description = description;
@@ -30,13 +30,13 @@ let budgetController = (() => {
         }
     };
     
-    let calculateTotal = type => {
+    const calculateTotal = type => {
         let sum = 0;
         data.allItems[type].forEach(cur => sum += cur.value);
         data.totals[type] = sum;
     };
     
-    let data = {
+    const data = {
         allItems: {
             expense: [],
             income: []

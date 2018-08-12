@@ -2,11 +2,11 @@ import budgetController from './budgetController.js'
 import UIController from './UIController.js'
 
 //GLOBAL APP CONTROLLER
-let controller = (() => {
+const controller = (() => {
     //Object DOMstrings from UIController
-    let DOM = UIController.getDOMstrings();
+    const DOM = UIController.getDOMstrings();
     
-    let setupEventListeners = () => {
+    const setupEventListeners = () => {
         document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
     
         document.addEventListener('keypress', event => {
@@ -22,32 +22,32 @@ let controller = (() => {
         
     };
     
-    let updateBudget = () => {
+    const updateBudget = () => {
         
         //1. Calculate the budget
         budgetController.calculateBudget();
         
         //2. Return  the budget
-        let budget = budgetController.getBudget();
+        const budget = budgetController.getBudget();
 
         //3. Display the budget on the UI
         UIController.displayBudget(budget);
     };
     
-    var updatePercentages = () => {
+    const updatePercentages = () => {
         
         // 1. Calculate percentages
         budgetController.calculatePercentages();
         
         // 2. Read percentages from the budget controller
-        let percentages = budgetController.getPercentages();
+        const percentages = budgetController.getPercentages();
         
         // 3. Update the UI with the new percentages
         UIController.displayPercentages(percentages);
         
     }
     
-    let ctrlAddItem = () => {
+    const ctrlAddItem = () => {
         let input, newItem;
         
         //1. Get the filed input data
@@ -73,7 +73,7 @@ let controller = (() => {
 
     };
     
-    let ctrlDeleteItem = event => {
+    const ctrlDeleteItem = event => {
         let itemID, splitID, type, ID;
         itemID = event.target.parentNode.parentNode.parentNode.id;
         

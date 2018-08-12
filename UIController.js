@@ -1,7 +1,7 @@
 // UI CONTROLLER
-let UIController = (() => {
+const UIController = (() => {
     //Objects to easier change the class data etc.
-    let DOMstrings = {
+    const DOMstrings = {
         inputType: '.add__type',
         inputDescription: '.add__description',
         inputValue: '.add__value',
@@ -18,7 +18,7 @@ let UIController = (() => {
     };
     
             
-    let formatNumber = (num, type) => {
+    const formatNumber = (num, type) => {
         let numSplit, int, dec
             
         num = Math.abs(num);
@@ -37,7 +37,7 @@ let UIController = (() => {
             
     };
     
-    let nodeListForEach = (list, callback) => {
+    const nodeListForEach = (list, callback) => {
     for(let i = 0; i < list.length; i++) {
         callback(list[i], i);
         }   
